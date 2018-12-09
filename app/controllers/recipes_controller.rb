@@ -13,7 +13,9 @@ class RecipesController < ApplicationController
       ActiveRecord::Base.transaction do
         recipes = Cocktail::SearchCocktails.new(query: query,
                                                 order: order,
-                                                clear_cache: clear_cache).call
+                                                clear_cache: clear_cache,
+                                                filter_search: filter_search,
+                                                filter_type: filter_type).call
 
         render json: { message: 'Retrieved recipes', data: recipes }, status: :ok
       end
@@ -32,6 +34,15 @@ class RecipesController < ApplicationController
 
   def query
     params.fetch(:query, "")
+  end
+
+  def filter_type
+    filter_type = params.fetch(:filter_type, "")
+    Recipe.column_names.include?(filter_type) ? filter_type : ""
+  end
+
+  def filter_search
+    params.fetch(:filter_search, "")
   end
 
   def clear_cache

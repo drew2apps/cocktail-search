@@ -23,7 +23,8 @@ module Cocktail
       r.save ? r : nil
     end
 
-    def organize_results(recipes = {}, order = "id")
+    def organize_results(recipes = {}, order = "id", filter_search = "", filter_type = "")
+      recipes = recipes.where("#{filter_type} = ?", filter_search) unless filter_search.empty? || filter_type.empty?
       recipes.order(order)
     end
   end
