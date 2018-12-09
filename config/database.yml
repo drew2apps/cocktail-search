@@ -12,3 +12,9 @@ development:
 test: &test
   <<: *default
   database: cocktail_test
+production:
+  adapter: postgresql
+  encoding: unicode
+  database: cocktail_prod
+  username: root
+  password:
