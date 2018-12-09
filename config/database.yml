@@ -8,10 +8,7 @@ default: &default
 
 development:
   <<: *default
-  database: anagram_dev
+  database: cocktail_dev
 test: &test
   <<: *default
-  database: anagram_test
-production:
-  <<: *default
-  database: anagram_prod
+  database: cocktail_test
