@@ -9,20 +9,16 @@ class RecipesController < ApplicationController
   end
 
   def index
-    begin
-      ActiveRecord::Base.transaction do
-        recipes = Cocktail::SearchCocktails.new(query: query,
-                                                order: order,
-                                                clear_cache: clear_cache,
-                                                filter_search: filter_search,
-                                                filter_type: filter_type,
-                                                limit: limit,
-                                                start: start).call
+    ActiveRecord::Base.transaction do
+      recipes = Cocktail::SearchCocktails.new(query: query,
+                                              order: order,
+                                              clear_cache: clear_cache,
+                                              filter_search: filter_search,
+                                              filter_type: filter_type,
+                                              limit: limit,
+                                              start: start).call
 
-        render json: { message: 'Retrieved recipes', data: recipes }, status: :ok
-      end
-    rescue => e
-      render json: { message: 'An error occurred while performing your search. Please try again.' }, status: :bad_request
+      render json: { message: 'Retrieved recipes', data: recipes }, status: :ok
     end
   end
 
