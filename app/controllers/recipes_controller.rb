@@ -12,6 +12,7 @@ class RecipesController < ApplicationController
     begin
       ActiveRecord::Base.transaction do
         recipes = Cocktail::SearchCocktails.new(query: query,
+                                                order: order,
                                                 clear_cache: clear_cache).call
 
         render json: { message: 'Retrieved recipes', data: recipes }, status: :ok
@@ -22,6 +23,12 @@ class RecipesController < ApplicationController
   end
 
   private
+
+  def order
+    #If the column name to order the results is not found, default to id
+    temp_order = params.fetch(:order, "id")
+    Recipe.column_names.include?(temp_order) ? temp_order : "id"
+  end
 
   def query
     params.fetch(:query, "")

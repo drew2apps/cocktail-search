@@ -1,18 +1,20 @@
 module Cocktail
   class SearchCocktails < Base
     attr_accessor :query,
+                  :order,
                   :clear_cache
 
     def initialize(args = {})
       super(args)
       self.query = args[:query]
+      self.order = args[:order]
       self.clear_cache = args[:clear_cache]
     end
 
     def call
       cache = CACHE_DEFAULTS.merge({ force: clear_cache })
       search = Search.find_or_initialize_by(query: query)
-      search.id.nil? ? search(search, cache)  : search.recipes
+      search.id.nil? ? search(search, cache)  : organize_results(search.recipes, order)
     end
 
     def search(search, cache)
@@ -25,7 +27,7 @@ module Cocktail
       end if response["drinks"]
 
       search.save
-      Recipe.where(id: recipe_ids)
+      organize_results(Recipe.where(id: recipe_ids), order)
     end
   end
 end

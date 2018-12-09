@@ -22,5 +22,9 @@ module Cocktail
       r.assign_attributes(title: args["strDrink"], instructions: args["strInstructions"], glass: args["strGlass"], alcoholic: args["strAlcoholic"], thumbnail: args["strDrinkThumb"])
       r.save ? r : nil
     end
+
+    def organize_results(recipes = {}, order = "id")
+      recipes.order(order)
+    end
   end
 end
