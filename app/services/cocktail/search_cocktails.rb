@@ -4,7 +4,9 @@ module Cocktail
                   :order,
                   :filter_search,
                   :filter_type,
-                  :clear_cache
+                  :clear_cache,
+                  :limit,
+                  :start
 
     def initialize(args = {})
       super(args)
@@ -12,13 +14,15 @@ module Cocktail
       self.order = args[:order]
       self.filter_search = args[:filter_search]
       self.filter_type = args[:filter_type]
+      self.limit = args[:limit]
+      self.start = args[:start]
       self.clear_cache = args[:clear_cache]
     end
 
     def call
       cache = CACHE_DEFAULTS.merge({ force: clear_cache })
       search = Search.find_or_initialize_by(query: query)
-      search.id.nil? ? search(search, cache)  : organize_results(search.recipes, order, filter_search, filter_type)
+      search.id.nil? ? search(search, cache)  : organize_results(search.recipes.limit(limit).offset(start), order, filter_search, filter_type)
     end
 
     def search(search, cache)
@@ -31,7 +35,7 @@ module Cocktail
       end if response["drinks"]
 
       search.save
-      organize_results(Recipe.where(id: recipe_ids), order, filter_search, filter_type)
+      organize_results(Recipe.where(id: recipe_ids).limit(limit).offset(start), order, filter_search, filter_type)
     end
   end
 end

@@ -15,7 +15,9 @@ class RecipesController < ApplicationController
                                                 order: order,
                                                 clear_cache: clear_cache,
                                                 filter_search: filter_search,
-                                                filter_type: filter_type).call
+                                                filter_type: filter_type,
+                                                limit: limit,
+                                                start: start).call
 
         render json: { message: 'Retrieved recipes', data: recipes }, status: :ok
       end
@@ -26,10 +28,19 @@ class RecipesController < ApplicationController
 
   private
 
+  def start
+    temp_start = params.fetch(:start, "").to_i
+    temp_start < 0 ? 0 : temp_start
+  end
+
+  def limit
+    temp_limit = params.fetch(:limit, Rails.configuration.default_result_limit_min).to_i
+    (temp_limit < 1 || temp_limit > Rails.configuration.default_result_limit_max) ? Rails.configuration.default_result_limit_min : temp_limit
+  end
+
   def order
-    #If the column name to order the results is not found, default to id
-    temp_order = params.fetch(:order, "id")
-    Recipe.column_names.include?(temp_order) ? temp_order : "id"
+    temp_order = params.fetch(:order, Rails.configuration.default_result_order)
+    Recipe.column_names.include?(temp_order) ? temp_order : Rails.configuration.default_result_order
   end
 
   def query

@@ -27,6 +27,13 @@ module CocktailSearch
 
     config.cocktail_key = ENV['COCKTAIL_KEY']
 
+    #Since the list of cocktail recipes returned from the server is small, we'll use 2 as a limit for testing an as an example for pagination
+    config.default_result_limit_min = 2
+    config.default_result_limit_max = 50
+
+    #If the column name to order the results is not found, default to id
+    config.default_result_order = "id"
+
     # Only loads a smaller set of middleware suitable for API only apps.
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.

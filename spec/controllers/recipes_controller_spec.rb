@@ -9,11 +9,43 @@ RSpec.describe RecipesController, type: :controller do
     expect(parsed_body["message"]).to eq("Retrieved recipes")
   end
 
-  it 'returns a JSON array of recipes with 25 results when no query is passed in' do
+  it 'returns a JSON array of recipes with the default 2 results when no query is passed in' do
     get :index, params: {}, as: :json
     expect(response.response_code).to eq(200)
     parsed_body = JSON.parse(response.body)
+    expect(parsed_body["data"].count).to eq(2)
+    expect(parsed_body["message"]).to eq("Retrieved recipes")
+  end
+
+  it 'returns a JSON array of recipes with 25 results when a limit is passed in' do
+    get :index, params: {limit: 25}, as: :json
+    expect(response.response_code).to eq(200)
+    parsed_body = JSON.parse(response.body)
     expect(parsed_body["data"].count).to eq(25)
+    expect(parsed_body["message"]).to eq("Retrieved recipes")
+  end
+
+  it 'returns a JSON array of recipes with 2 results when a high limit is passed in' do
+    get :index, params: {limit: 999}, as: :json
+    expect(response.response_code).to eq(200)
+    parsed_body = JSON.parse(response.body)
+    expect(parsed_body["data"].count).to eq(2)
+    expect(parsed_body["message"]).to eq("Retrieved recipes")
+  end
+
+  it 'returns a JSON array of recipes with 2 results when a negative limit is passed in' do
+    get :index, params: {limit: -1}, as: :json
+    expect(response.response_code).to eq(200)
+    parsed_body = JSON.parse(response.body)
+    expect(parsed_body["data"].count).to eq(2)
+    expect(parsed_body["message"]).to eq("Retrieved recipes")
+  end
+
+  it 'returns a JSON array of recipes with 2 results when an invalid limit is passed in' do
+    get :index, params: {limit: "foo"}, as: :json
+    expect(response.response_code).to eq(200)
+    parsed_body = JSON.parse(response.body)
+    expect(parsed_body["data"].count).to eq(2)
     expect(parsed_body["message"]).to eq("Retrieved recipes")
   end
 
