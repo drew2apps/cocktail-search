@@ -1,7 +1,22 @@
 class RecipesController < ApplicationController
+  def show
+    recipe = Recipe.find_by(id: params[:id])
+    if recipe
+      render json: { message: 'Retrieved recipe', data: recipe }, status: :ok
+    else
+      render json: { message: 'Could not find recipe' }, status: :not_found
+    end
+  end
+
   def index
-    recipes = Cocktail::SearchCocktails.new(query: query).call
-    render json: { message: 'Retrieved recipes', data: recipes }, status: :ok
+    begin
+      ActiveRecord::Base.transaction do
+        recipes = Cocktail::SearchCocktails.new(query: query).call
+        render json: { message: 'Retrieved recipes', data: recipes }, status: :ok
+      end
+    rescue => e
+      render json: { message: 'An error occurred while performing your search. Please try again.' }, status: :bad_request
+    end
   end
 
   private
