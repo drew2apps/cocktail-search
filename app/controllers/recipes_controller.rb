@@ -11,7 +11,9 @@ class RecipesController < ApplicationController
   def index
     begin
       ActiveRecord::Base.transaction do
-        recipes = Cocktail::SearchCocktails.new(query: query).call
+        recipes = Cocktail::SearchCocktails.new(query: query,
+                                                clear_cache: clear_cache).call
+
         render json: { message: 'Retrieved recipes', data: recipes }, status: :ok
       end
     rescue => e
@@ -23,5 +25,9 @@ class RecipesController < ApplicationController
 
   def query
     params.fetch(:query, "")
+  end
+
+  def clear_cache
+    params[:clear_cache].present?
   end
 end

@@ -1,5 +1,6 @@
 module Cocktail
   class Base
+    CACHE_DEFAULTS = { expires_in: 2.days, force: false}
 
     def initialize(args = {})
       args.each do |name, value|
