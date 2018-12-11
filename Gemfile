@@ -15,6 +15,7 @@ gem 'activerecord-import', '0.27.0'
 
 #Testing Gems
 group :development, :test do
+  gem 'rb-readline'
   gem 'rspec-rails', '3.8.0'
 end
 

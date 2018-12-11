@@ -10,6 +10,7 @@ module Cocktail
     end
 
     def parse_ingredients(args = {})
+      #Ingredients from the thecocktaildb come in as {"strIngredient1" and "strMeasure1"} this strips out strIngredient and strMeasure then stores the details in a hash
       ingredients = args.select { |k, v| k.include?("strIngredient") && !v.blank? }.transform_keys { |k| k.sub("strIngredient", "") }
       ingredients = ingredients.inject({}) { |h, (k, title)| h[k] = {title: title.strip}; h }
       args.select { |k, v| k.include?("strMeasure") && !v.blank? }.each { |k, measurement| ingredients[k.sub("strMeasure", "")][:measurement] = measurement.strip }

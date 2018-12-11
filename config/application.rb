@@ -22,8 +22,8 @@ module CocktailSearch
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.2
 
-    config.autoload_paths += %W(#{config.root}/lib/cocktail)
-    config.autoload_paths += %W(#{config.root}/app/services)
+    config.eager_load_paths += %W(#{config.root}/lib/cocktail)
+    config.eager_load_paths += %W(#{config.root}/app/services)
 
     config.cocktail_key = ENV['COCKTAIL_KEY']
 
